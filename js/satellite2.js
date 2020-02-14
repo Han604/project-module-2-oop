@@ -11,13 +11,13 @@ class Satellite2{
         this.domElement.style.zIndex = '10';
         root.appendChild(this.domElement);
     }
-    satLeft () {
+    satLeft2 () {
         if (this.x > 0) {
             this.x = this.x - PLAYER_WIDTH;
         }
         this.domElement.style.left = `${this.x}px`
     }
-    satRight () {
+    satRight2 () {
         if (this.x + PLAYER_WIDTH < GAME_WIDTH) {
             this.x = this.x + PLAYER_WIDTH;
         }

@@ -38,7 +38,6 @@ class Engine {
         this.powerups.forEach(powerup => {
             powerup.update3(timeDiff);
         })
-
         this.bullets.forEach(bullet => {
             bullet.update2(timeDiff);
         });
@@ -72,6 +71,7 @@ class Engine {
             window.alert("Game over");
             return;
         }
+        this.collisionCheckBullet()
         POWERUP_TIMER += 1;
         console.log(POWERUP_TIMER);
         // If the player is not dead, then we put a setTimeout to run the gameLoop in 20 milliseconds
@@ -79,11 +79,10 @@ class Engine {
     }
     // This method is not implemented correctly, which is why
     // the burger never dies. In your exercises you will fix this method.
-    
     isPlayerDead = () => {
         // console.log ('upkeep')
         return this.collisionCheck(this.player);
-        
+
     }
 
     collisionCheck = (player) => {
@@ -116,11 +115,12 @@ class Engine {
                     cucumber.x + BULLET_WIDTH > enemy.x &&
                     cucumber.y < enemy.y + ENEMY_HEIGHT &&
                     cucumber.y + BULLET_HEIGHT > enemy.y) {
-                        enemy.destroyed = true;
-                        bullet.destroyed = true;
+                        enemy.destroy();
+                        cucumber.destroy();
                         if (POWERUP_TIMER >= 400) {
                             let powerCheck = (Math.random() * 10)
                             if (powerCheck >= 4) {
+                                console.log(this.root);
                                 this.powerups.push(new Powerup(this.root, enemy.x, enemy.y))
                             }
                         }
@@ -134,14 +134,14 @@ class Engine {
                 powerup.x + POWERUP_WIDTH > this.player.x &&
                 powerup.y < this.player.y + PLAYER_HEIGHT &&
                 powerup.y + POWERUP_HEIGHT > this.player.y) {
-                    powerup.destroyed = true;
-                    if (this.satellites.includes(Satellite1)) {
-                        this.satellites.push(new Satellite2(this.root, this.player.x));
-                    } else if (this.satellites.includes(Satellite2)) {
-                        this.satellites.push(new Satellite1(this.root, this.player.x));
-                    }else {
-                        return;
-                    }
+                    powerup.destroy();
+                    // if (this.satellites.includes(Satellite1)) {
+                    //     this.satellites.push(new Satellite2(this.root, this.player.x));
+                    // } else if (this.satellites.includes(Satellite2)) {
+                    //     this.satellites.push(new Satellite1(this.root, this.player.x));
+                    // }else {
+                    //     return;
+                    // }
                     // this.satellites.push(new Satellite1(this.root, this.player.x));
                 }
         })
