@@ -16,6 +16,9 @@ const keydownHandler = event => {
     if (event.code === "ArrowRight") {
         gameEngine.player.moveRight();
     }
+    if (event.code === "ArrowUp") {
+        gameEngine.fireBullet()
+    }
 }
 // We add an event listener to document. document the ancestor of all DOM nodes in the DOM.
 document.addEventListener("keydown", keydownHandler);

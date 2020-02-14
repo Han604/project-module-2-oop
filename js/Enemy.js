@@ -37,7 +37,7 @@ class Enemy {
         this.domElement.style.position = 'absolute';
         this.domElement.style.left = `${this.x}px`;
         this.domElement.style.top = `${this.y}px`;
-        this.domElement.style.zIndex = 5;
+        this.domElement.style.zIndex = '5';
         // Show that the user can actually see the img DOM node, we append it to the root DOM node.
         theRoot.appendChild(this.domElement);
         this.speed = Math.random() / 2 + 0.25;

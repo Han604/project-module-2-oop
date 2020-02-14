@@ -14,6 +14,10 @@ class Engine {
         // Initially, we have no enemies in the game. The enemies property refers to an array
         // that contains instances of the Enemy class
         this.enemies = [];
+        // we add the bullets array that will contain instances of bullets
+        this.bullets = [];
+        this.powerups = [];
+        this.satellites = [];
         // We add the background image to the game
         addBackground(this.root);
     }
@@ -31,9 +35,24 @@ class Engine {
         this.lastFrame = (new Date).getTime();
         // We use the number of milliseconds since the last call to gameLoop to update the enemy positions.
         // Furthermore, if any enemy is below the bottom of our game, its destroyed property will be set. (See Enemy.js)
+        this.powerups.forEach(powerup => {
+            powerup.update3(timeDiff);
+        })
+
+        this.bullets.forEach(bullet => {
+            bullet.update2(timeDiff);
+        });
+        
         this.enemies.forEach(enemy => {
             enemy.update(timeDiff);
         });
+        this.powerups = this.powerups.filter(powerup => {
+            return !powerup.consumed;
+        })
+
+        this.bullets = this.bullets.filter(bullet => {
+            return !bullet.destroyed;
+        })
         // We remove all the destroyed enemies from the array referred to by \`this.enemies\`.
         // We use filter to accomplish this.
         // Remember: this.enemies only contains instances of the Enemy class.
@@ -53,12 +72,91 @@ class Engine {
             window.alert("Game over");
             return;
         }
+        POWERUP_TIMER += 1;
+        console.log(POWERUP_TIMER);
         // If the player is not dead, then we put a setTimeout to run the gameLoop in 20 milliseconds
         setTimeout(this.gameLoop, 20);
     }
     // This method is not implemented correctly, which is why
     // the burger never dies. In your exercises you will fix this method.
+    
     isPlayerDead = () => {
-        return false;
+        // console.log ('upkeep')
+        return this.collisionCheck(this.player);
+        
     }
-}
+
+    collisionCheck = (player) => {
+        let check = false
+        // console.log(player);
+        // console.log(this.enemies);
+        // console.log(`player x:${player.x} player y:${player.y} enemy x:${enemy.x} enemy y:${enemy.y}`)
+        this.enemies.forEach(enemy => {
+            // console.log(`player x:${player.x} player y:${player.y} enemy x:${enemy.x} enemy y:${enemy.y}`)
+            // console.log('player.x < enemy.x + enemy.width', player.x, '<', enemy.x , enemy.width);
+            // console.log('player.x + player.width > enemy.x', player.x + player.width > enemy.x);
+            // console.log('player.y < enemy.y + enemy.height', player.y < enemy.y + enemy.height);
+            // console.log('player.y + player.height > enemy.y', player.y + player.height > enemy.y);
+            if (player.x < enemy.x + ENEMY_WIDTH &&
+                player.x + PLAYER_WIDTH > enemy.x &&
+                player.y < enemy.y + ENEMY_HEIGHT &&
+                player.y + PLAYER_HEIGHT > enemy.y) {
+                    // console.log('hit')
+                    check = true;
+                }
+            });
+            // console.log('check',check)
+            return check;
+        }
+    collisionCheckBullet = () => {
+        this.bullets.forEach (cucumber => {
+            this.enemies.forEach (enemy => {
+                // console.log ('cucumber.x < enemy.x + ENEMY_WIDTH' + cucumber.x, enemy.x, ENEMY_WIDTH)
+                if (cucumber.x < enemy.x + ENEMY_WIDTH &&
+                    cucumber.x + BULLET_WIDTH > enemy.x &&
+                    cucumber.y < enemy.y + ENEMY_HEIGHT &&
+                    cucumber.y + BULLET_HEIGHT > enemy.y) {
+                        enemy.destroyed = true;
+                        bullet.destroyed = true;
+                        if (POWERUP_TIMER >= 400) {
+                            let powerCheck = (Math.random() * 10)
+                            if (powerCheck >= 4) {
+                                this.powerups.push(new Powerup(this.root, enemy.x, enemy.y))
+                            }
+                        }
+                    }
+            })
+        })
+    }
+    collisionCheckPowerup = () => {
+        this.powerups.forEach (powerup => {
+            if (powerup.x < this.player.x + PLAYER_WIDTH &&
+                powerup.x + POWERUP_WIDTH > this.player.x &&
+                powerup.y < this.player.y + PLAYER_HEIGHT &&
+                powerup.y + POWERUP_HEIGHT > this.player.y) {
+                    powerup.destroyed = true;
+                    if (this.satellites.includes(Satellite1)) {
+                        this.satellites.push(new Satellite2(this.root, this.player.x));
+                    } else if (this.satellites.includes(Satellite2)) {
+                        this.satellites.push(new Satellite1(this.root, this.player.x));
+                    }else {
+                        return;
+                    }
+                    // this.satellites.push(new Satellite1(this.root, this.player.x));
+                }
+        })
+    };
+        
+        fireBullet = () => {
+            this.bullets.push(new Bullet(this.root, this.player.x));
+        }
+    }
+    // const ENEMY_WIDTH = 75;
+    // const ENEMY_HEIGHT = 156;
+    // const MAX_ENEMIES = 3;
+    //enemy.x enemy.y
+    
+// // These constants represent the player width and height.
+// const PLAYER_WIDTH = 75;
+// const PLAYER_HEIGHT = 54;
+//player.x player.y
