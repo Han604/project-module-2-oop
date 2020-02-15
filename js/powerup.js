@@ -14,7 +14,7 @@ class Powerup {
         root.appendChild(this.domElement);
     }
     destroy = () => {
-        this.root.removeChild(document.getElementById('powerup'));
+        this.root.removeChild(this.domElement);
         this.destroyed = true;  
     }
     update3 = (timeDiff) => {
@@ -24,7 +24,7 @@ class Powerup {
             console.log('root' + this.root)
             console.log('dom element' + this.domElement)
             
-            this.root.removeChild(document.getElementById('powerup'));
+            this.root.removeChild(this.domElement);
             this.destroyed = true;
 
         }

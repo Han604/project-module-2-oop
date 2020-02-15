@@ -11,6 +11,7 @@ class Engine {
         // We create our hamburger.
         // Please refer to Player.js for more information about what happens when you create a player
         this.player = new Player(this.root);
+        this.pointCounter = new Pointcounter(this.root);
         // Initially, we have no enemies in the game. The enemies property refers to an array
         // that contains instances of the Enemy class
         this.enemies = [];
@@ -46,7 +47,7 @@ class Engine {
             enemy.update(timeDiff);
         });
         this.powerups = this.powerups.filter(powerup => {
-            return !powerup.consumed;
+            return !powerup.destroyed;
         })
 
         this.bullets = this.bullets.filter(bullet => {
@@ -71,7 +72,9 @@ class Engine {
             window.alert("Game over");
             return;
         }
-        this.collisionCheckBullet()
+        this.pointCounter.updatePoint();
+        this.collisionCheckBullet();
+        this.collisionCheckPowerup();
         POWERUP_TIMER += 1;
         console.log(POWERUP_TIMER);
         // If the player is not dead, then we put a setTimeout to run the gameLoop in 20 milliseconds
@@ -117,6 +120,8 @@ class Engine {
                     cucumber.y + BULLET_HEIGHT > enemy.y) {
                         enemy.destroy();
                         cucumber.destroy();
+                        POINT_COUNTER += 40;
+                        console.log(POINT_COUNTER)
                         if (POWERUP_TIMER >= 400) {
                             let powerCheck = (Math.random() * 10)
                             if (powerCheck >= 4) {
@@ -135,6 +140,10 @@ class Engine {
                 powerup.y < this.player.y + PLAYER_HEIGHT &&
                 powerup.y + POWERUP_HEIGHT > this.player.y) {
                     powerup.destroy();
+                    POWERUP_TIMER = -400;
+                    POINT_COUNTER += 400
+                    console.log(POINT_COUNTER)
+                    }
                     // if (this.satellites.includes(Satellite1)) {
                     //     this.satellites.push(new Satellite2(this.root, this.player.x));
                     // } else if (this.satellites.includes(Satellite2)) {
@@ -143,14 +152,12 @@ class Engine {
                     //     return;
                     // }
                     // this.satellites.push(new Satellite1(this.root, this.player.x));
-                }
-        })
+                })
+            }
+                    fireBullet = () => {
+                        this.bullets.push(new Bullet(this.root, this.player.x));
+                    }
     };
-        
-        fireBullet = () => {
-            this.bullets.push(new Bullet(this.root, this.player.x));
-        }
-    }
     // const ENEMY_WIDTH = 75;
     // const ENEMY_HEIGHT = 156;
     // const MAX_ENEMIES = 3;

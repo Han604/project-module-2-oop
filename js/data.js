@@ -25,5 +25,6 @@ const POWERUP_WIDTH = 50;
 const POWERUP_HEIGHT = 50;
 
 let POWERUP_TIMER = 0
+let POINT_COUNTER = 0
 
 
