@@ -32,17 +32,20 @@ class Enemy {
         // is why we create a property that refers to it.
         this.domElement = document.createElement('img');
         // We give it a src attribute to specify which image to display.
-        this.domElement.src = './images/enemy.png';
+        this.domElement.src = './images/enemy2.png';
         // We modify the CSS style of the DOM node.
         this.domElement.style.position = 'absolute';
         this.domElement.style.left = `${this.x}px`;
         this.domElement.style.top = `${this.y}px`;
-        this.domElement.style.zIndex = 5;
+        this.domElement.style.zIndex = '5';
         // Show that the user can actually see the img DOM node, we append it to the root DOM node.
         theRoot.appendChild(this.domElement);
         this.speed = Math.random() / 2 + 0.25;
     }
-
+    destroy(){
+        this.root.removeChild(this.domElement);
+        this.destroyed = true;
+    }
     // We set the speed property of the enemy. This determines how fast it moves down the screen. 
     // To make sure that every enemy has a different speed, we use Math.random()
     // this method will be called on the enemy instance every few milliseconds. The parameter
@@ -60,5 +63,11 @@ class Enemy {
                 this.root.removeChild(this.domElement);
                 this.destroyed = true;
         }
+    }
+    upgradeCat() {
+        this.domElement.src = 'images/enemy2.png';
+    }
+    downgradeCat() {
+        this.domElement.src = 'images/enemy.png';
     }
 }

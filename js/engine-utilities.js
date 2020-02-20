@@ -42,6 +42,7 @@ const addBackground = root => {
     bg.src = 'images/stars.png';
     bg.style.height = `${GAME_HEIGHT}px`;
     bg.style.width = `${GAME_WIDTH}px`;
+    bg.style.zIndex = '1'
     // We add it to the root DOM node
     root.append(bg);
     // We don't want the enemies to go beyond the lower edge of the image
